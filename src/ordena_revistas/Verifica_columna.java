@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Verifica_columna {
     String valores[] = new String[500];
     int cont = 0;
+    Conexion con = new Conexion(); 
     
     public BufferedReader getBuffered(String link){
         BufferedReader br = null;
@@ -42,7 +43,7 @@ public class Verifica_columna {
         for (int i = 100; i <= 181100; i=i+100) {   
             String rutaArchivo = "sources/UL "+i+".xls";
             System.out.println("archivo: "+rutaArchivo);
-            getBuffered(rutaArchivo);
+            //getBuffered(rutaArchivo);
             try {
                 HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(rutaArchivo));
                 HSSFSheet sheet = wb.getSheetAt(0);
@@ -77,6 +78,7 @@ public class Verifica_columna {
         }
         imprime();
         System.out.println("contador: "+ cont2);
+        System.out.println("contador de columnas: "+ cont);
     }
     
     public void actualizar_vec(String celda){
