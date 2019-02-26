@@ -19,7 +19,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Verifica_columna {
-    String valores[] = new String[500];
+    String valores[] = new String[70];
     int cont = 0;
     Conexion con = new Conexion(); 
     
@@ -66,7 +66,7 @@ public class Verifica_columna {
                             // se obtiene la celda en específico y se la imprime
                             cell = cellIterator.next();
                             //System.out.print(cell.getStringCellValue()+" | ");
-                            actualizar_vec(cell.getStringCellValue());
+                            actualizar_vec(cell.getStringCellValue().toLowerCase());
 
                     }                    
                     j++;
@@ -79,6 +79,7 @@ public class Verifica_columna {
         imprime();
         System.out.println("contador: "+ cont2);
         System.out.println("contador de columnas: "+ cont);
+        con.crearBd(valores);
     }
     
     public void actualizar_vec(String celda){
@@ -91,13 +92,16 @@ public class Verifica_columna {
         }
         if(!esta){
             valores[cont] = celda;
+            //valores[cont] = valores[cont].replaceAll("\\(", "");
+            //valores[cont] = valores[cont].replaceAll("\\)", "");
             cont++;
         }
     }
     
     public void imprime(){
         for (int i = 0; i < valores.length; i++) {
-            if(valores[i] != null){
+            if(valores[i] != null){                
+                valores[i]=valores[i].replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash");
                 String valore = valores[i];
                 System.out.println(valore);
             }                

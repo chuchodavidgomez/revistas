@@ -21,8 +21,8 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String user = "chuchito";
-    private static String password = "root";
+    private static String user = "root";
+    private static String password = "";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -60,10 +60,13 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas ('Title Id' INT NOT NULL PRIMARY KEY, ";
+            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (Title_Id INT NOT NULL PRIMARY KEY, ";
             for (int j = 1; j < columnas.length; j++) {
-                i = i + "'" +columnas[j]+ "' VARCHAR(20),";
-            }                    
+                if(columnas[j] != null){
+                    i = i + columnas[j] + " VARCHAR(20),";                    
+                }                    
+            }    
+            i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
             System.out.println(i);
             Statement st = conn.createStatement();
             st.execute(i);
