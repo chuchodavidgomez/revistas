@@ -73,13 +73,12 @@ public class Verifica_columna {
                 }
             } catch (Exception e) {
                     e.getMessage();
-            }
-            
+            }            
         }
         con.inserta_columnas(valores);
         //imprime();
-        //System.out.println("contador: "+ cont2);
-        //System.out.println("contador de columnas: "+ cont);
+        System.out.println("contador: "+ cont2);
+        System.out.println("contador de columnas: "+ cont);
         //con.crearBd(valores);
     }
     
@@ -111,5 +110,81 @@ public class Verifica_columna {
     
     public void verifica_columnas(){
         String[][] columnas= con.getColumnas();
+        String[] columnas_guardadas;
+        for (int i = 100; i <= 181100; i=i+100) {   
+            String rutaArchivo = "sources/UL "+i+".xls";
+            System.out.println("archivo: "+rutaArchivo);
+            //getBuffered(rutaArchivo);             
+            try {
+                HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(rutaArchivo));
+                HSSFSheet sheet = wb.getSheetAt(0);
+                // leer archivo excel
+
+                //obtener todas las filas de la hoja excel            
+                Iterator<Row> rowIterator = sheet.iterator();
+
+                Row row;
+                // se recorre cada fila hasta el final
+                int j = 0;
+                String cadena = "INSERT INTO columnas_revistas ";
+                String columna = "(name_file, ";
+                String values = "('"+rutaArchivo+"', ";
+                while (j!=1&&rowIterator.hasNext()) {
+                    columnas_guardadas = new String[70];
+                    row = rowIterator.next();                  
+                    //se obtiene las celdas por fila
+                    Iterator<Cell> cellIterator = row.cellIterator();
+                    Cell cell;
+                    //se recorre cada celda
+                    cont = 0;                    
+                    while (cellIterator.hasNext()) {
+                        // se obtiene la celda en específico y se la imprime                        
+                        cell = cellIterator.next();
+                        //System.out.println("-> "+cell.getStringCellValue().toLowerCase());
+                        if(contiene_columna(columnas,cell.getStringCellValue().toLowerCase())){
+                            if(cont==0){
+                                columnas_guardadas[cont] = cell.getStringCellValue().toLowerCase();
+                                cont++;
+                                columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
+                                values = values + "'1', ";
+                            }else{
+                                if(!verifica_repe(cell.getStringCellValue().toLowerCase(), columnas_guardadas)){
+                                    columnas_guardadas[cont] = cell.getStringCellValue().toLowerCase();
+                                    cont++;
+                                    columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
+                                    values = values + "'1', ";
+                                }
+                            }                                                        
+                        }                                                                                          
+                    }                    
+                    j++;
+                }
+                columna = columna.substring(0, columna.length()-2)+")";
+                values = values.substring(0, values.length()-2)+")";
+                //System.out.println("-> "+columna);
+                cadena = cadena + columna + " VALUES " + values;
+                con.ejecuta_sql(cadena);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+    }
+    
+    public boolean contiene_columna(String[][] columnas, String columna){
+        for (int i = 0; i < columnas.length; i++) {            
+            if(columnas[i][1].equals(columna)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean verifica_repe(String celda, String[] columnas_guardadas){        
+        for (int i = 0; i < columnas_guardadas.length; i++) {
+            if(celda.equals(columnas_guardadas[i])){
+                return true;
+            }                            
+        }        
+        return false;
     }
 }

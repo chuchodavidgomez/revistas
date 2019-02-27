@@ -21,8 +21,8 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String user = "chuchito";
-    private static String password = "root";
+    private static String user = "root";
+    private static String password = "";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -60,8 +60,8 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (title_id INT NOT NULL PRIMARY KEY, ";
-            for (int j = 1; j < columnas.length; j++) {
+            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            for (int j = 0; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " VARCHAR(20),";                    
                 }                    
@@ -83,7 +83,7 @@ public class Conexion
         try 
         {   
             
-            for (int j = 1; j < columnas.length; j++) {                
+            for (int j = 0; j < columnas.length; j++) {                
                 if(columnas[j] != null){
                     String i = "INSERT INTO columnas_estadisticas (columna,total) VALUES ('" + columnas[j] + "','0');";                       
                     System.out.println(i);
@@ -98,31 +98,22 @@ public class Conexion
             System.out.println("Ocurrio este error "+e.getMessage());
         }
     }
-    
-  
+   
+   
     //método para obtener la información de un alumno por semestre
-    public String getAlumno(String cedula, String semestre)
-    {
-        String sql = "";
-        ResultSet alumnos = null;
-        String alumno = "";
+    public void ejecuta_sql(String sql)
+    {        
         try 
-        {            
-            sql = "SELECT * FROM estudiante WHERE cedula='"+cedula+"' AND semestre='" +semestre+ "'";           
+        {                   
             System.out.println(sql);
             Statement st = conn.createStatement();
-            alumnos = st.executeQuery(sql); 
-            if(alumnos.next())
-            {
-                alumno = alumnos.getString("cedula");
-                
-            }
+            st.execute(sql); 
+            
         } 
-        catch (SQLException ex) 
+        catch (SQLException e) 
         {
-            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Ocurrio este error "+e.getMessage());
         }
-        return alumno;
     }
     
     //métodos para obtener la información de todos los columnas
@@ -140,13 +131,13 @@ public class Conexion
             columnas = st.executeQuery(sql);            
             stats_columnas = new String[obtenerCantFilas(columnas)][3];            
             int i = 0;                                       
-            while(columnas.next())
-            {
+            
+            do{
                 for (int j = 0; j < 2; j++) {
                     stats_columnas[i][j] = columnas.getString(j+1);
                 }
                 i++;
-            }
+            }while(columnas.next());
         } 
         catch (SQLException ex) 
         {
