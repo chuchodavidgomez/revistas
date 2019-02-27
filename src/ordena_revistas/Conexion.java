@@ -21,8 +21,8 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String user = "root";
-    private static String password = "";
+    private static String user = "chuchito";
+    private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -60,7 +60,7 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (Title_Id INT NOT NULL PRIMARY KEY, ";
+            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (title_id INT NOT NULL PRIMARY KEY, ";
             for (int j = 1; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " VARCHAR(20),";                    
@@ -77,33 +77,28 @@ public class Conexion
         }
     }
     
-    /*
-    //método para insertar los alumnos en la base de datos
-    public void insertAlumno(Alumno alumno)
+    public void inserta_columnas(String[] columnas)
     {
+        System.out.println("entre aqui");
         try 
-        {
-            String i = "INSERT INTO estudiante VALUES "+
-                    "('"+alumno.getCedula()+                                        
-                    "','"+alumno.getSemestre()+
-                    "','"+alumno.getDireccion()+                    
-                    "','"+alumno.getMunicipio()+
-                    "','"+alumno.getDepartamento()+  
-                    "','"+
-                    "','"+
-                    "','"+
-                    "','"+
-                    "','"+
-                    "')";
-            System.out.println(i);
-            Statement st = conn.createStatement();
-            st.execute(i);
+        {   
+            
+            for (int j = 1; j < columnas.length; j++) {                
+                if(columnas[j] != null){
+                    String i = "INSERT INTO columnas_estadisticas (columna,total) VALUES ('" + columnas[j] + "','0');";                       
+                    System.out.println(i);
+                    Statement st = conn.createStatement();
+                    st.execute(i);
+                }                      
+            }    
+            
         } 
         catch (Exception e) 
         {
             System.out.println("Ocurrio este error "+e.getMessage());
         }
-    }*/
+    }
+    
   
     //método para obtener la información de un alumno por semestre
     public String getAlumno(String cedula, String semestre)
@@ -130,33 +125,26 @@ public class Conexion
         return alumno;
     }
     
-    //métodos para obtener la información de todos los alumnos
-    public String[][] getAlumnos()
+    //métodos para obtener la información de todos los columnas
+    public String[][] getColumnas()
     {
         String sql = "";        
-        ResultSet alumnos = null;
-        String[][] datosAlumnos = null;
+        ResultSet columnas = null;
+        String[][] stats_columnas = null;
         try 
         {            
             
-            sql = "SELECT * FROM estudiante";           
+            sql = "SELECT * FROM columnas_estadisticas";           
             System.out.println(sql);
             Statement st = conn.createStatement();                        
-            alumnos = st.executeQuery(sql);
-            datosAlumnos = new String[obtenerCantFilas(alumnos)][10];            
-            int i = 0;
-            while(alumnos.next())
+            columnas = st.executeQuery(sql);            
+            stats_columnas = new String[obtenerCantFilas(columnas)][3];            
+            int i = 0;                                       
+            while(columnas.next())
             {
-                datosAlumnos[i][0] = alumnos.getString("cedula");
-                datosAlumnos[i][1] = alumnos.getString("semestre");
-                datosAlumnos[i][2] = alumnos.getString("direccion");                                                
-                datosAlumnos[i][3] = alumnos.getString("municipio");            
-                datosAlumnos[i][4] = alumnos.getString("departamento");
-                datosAlumnos[i][5] = alumnos.getString("direccion_normalizada");                
-                datosAlumnos[i][6] = alumnos.getString("latitud");
-                datosAlumnos[i][7] = alumnos.getString("longitud");
-                datosAlumnos[i][8] = alumnos.getString("barrio");
-                datosAlumnos[i][9] = alumnos.getString("confiabilidad");
+                for (int j = 0; j < 2; j++) {
+                    stats_columnas[i][j] = columnas.getString(j+1);
+                }
                 i++;
             }
         } 
@@ -164,7 +152,7 @@ public class Conexion
         {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return datosAlumnos;
+        return stats_columnas;
     }
     
     //método para actualizar la información de un estudiante

@@ -76,10 +76,11 @@ public class Verifica_columna {
             }
             
         }
-        imprime();
-        System.out.println("contador: "+ cont2);
-        System.out.println("contador de columnas: "+ cont);
-        con.crearBd(valores);
+        con.inserta_columnas(valores);
+        //imprime();
+        //System.out.println("contador: "+ cont2);
+        //System.out.println("contador de columnas: "+ cont);
+        //con.crearBd(valores);
     }
     
     public void actualizar_vec(String celda){
@@ -106,5 +107,9 @@ public class Verifica_columna {
                 System.out.println(valore);
             }                
         }
+    }
+    
+    public void verifica_columnas(){
+        String[][] columnas= con.getColumnas();
     }
 }
