@@ -21,8 +21,8 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String user = "root";
-    private static String password = "";
+    private static String user = "chuchito";
+    private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -64,6 +64,27 @@ public class Conexion
             for (int j = 0; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " VARCHAR(20),";                    
+                }                    
+            }    
+            i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            System.out.println(i);
+            Statement st = conn.createStatement();
+            st.execute(i);
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Ocurrio este error "+e.getMessage());
+        }
+    }
+    
+    public void crearbd_estadisticas(String[] columnas)
+    {
+        try 
+        {
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_revistas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            for (int j = 0; j < columnas.length; j++) {
+                if(columnas[j] != null){
+                    i = i + columnas[j] + " FLOAT,";                    
                 }                    
             }    
             i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
@@ -133,7 +154,7 @@ public class Conexion
             int i = 0;                                       
             
             do{
-                for (int j = 0; j < 2; j++) {
+                for (int j = 0; j < 3; j++) {
                     stats_columnas[i][j] = columnas.getString(j+1);
                 }
                 i++;
@@ -146,25 +167,63 @@ public class Conexion
         return stats_columnas;
     }
     
-    //método para actualizar la información de un estudiante
-    /*
-    public void actulizarAlumno(Alumno alumno)
+    public String[][] getPromedios()
     {
+        String sql = "";        
+        ResultSet columnas = null;
+        String[][] stats_columnas = null;
         try 
-        {        
-            String i = "UPDATE estudiante SET "                    
-                    +"direccion_normalizada='"+alumno.getDireccion_normalizada()
-                    +"', confiabilidad='"+alumno.getConfiabilidad()
-                    +"' WHERE cedula='"+alumno.getCedula()+"' AND semestre='"+alumno.getSemestre()+"'";
-            System.out.println(i);
-            Statement st = conn.createStatement();
-            st.execute(i);
+        {            
+            
+            sql = "SELECT * FROM estadisticas_revistas";   
+            System.out.println(sql);
+            Statement st = conn.createStatement();                        
+            columnas = st.executeQuery(sql);            
+            stats_columnas = new String[obtenerCantFilas(columnas)][68];            
+            int i = 0;                                       
+            
+            do{
+                for (int j = 1; j < 68; j++) {
+                    stats_columnas[i][j-1] = columnas.getString(j+1);
+                }
+                i++;
+            }while(columnas.next());
         } 
         catch (SQLException ex) 
         {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+        return stats_columnas;
+    }
+    
+    public String[][] getEstadisticas()
+    {
+        String sql = "";        
+        ResultSet columnas = null;
+        String[][] stats_columnas = null;
+        try 
+        {            
+            
+            sql = "SELECT * FROM columnas_revistas";   
+            System.out.println(sql);
+            Statement st = conn.createStatement();                        
+            columnas = st.executeQuery(sql);            
+            stats_columnas = new String[obtenerCantFilas(columnas)][68];            
+            int i = 0;                                       
+            
+            do{
+                for (int j = 1; j < 68; j++) {
+                    stats_columnas[i][j-1] = columnas.getString(j+1);
+                }
+                i++;
+            }while(columnas.next());
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stats_columnas;
+    }
         
     public int obtenerCantFilas(ResultSet resultSet) throws SQLException
     {
