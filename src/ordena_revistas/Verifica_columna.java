@@ -175,7 +175,8 @@ public class Verifica_columna {
     public void llena_estadisticas_revistas(){
         String[][] columnas= con.getColumnas();
         String[][] columnas_guardadas = null;
-        for (int i = 100; i <= 181100; i=i+100) {   
+        for (int i = 100; i <= 181100; i=i+100) {
+        if(i == 79100 || i == 79600){
             String rutaArchivo = "sources/UL "+i+".xls";
             System.out.println("archivo: "+rutaArchivo);
             int contFila = 0;
@@ -224,7 +225,8 @@ public class Verifica_columna {
             } catch (Exception e) {
                 //e.getMessage();
                 System.out.println("ocurrio este error2 "+e);
-            }             
+            }         
+        }
         }        
     }
     
@@ -306,6 +308,33 @@ public class Verifica_columna {
             con.ejecuta_sql(sql);
         }
     }        
+    
+    public void verifica_diferentes(){
+        String[][] promedios = con.getPromedios();        
+        String[][] estadisticas1 = con.getEstadisticas();          
+        boolean entro = false;
+        for (int i = 100; i <= 181100; i=i+100) {   
+            String rutaArchivo = "sources/UL "+i+".xls";
+            for (int j = 0; j < estadisticas1.length; j++) {
+                if(rutaArchivo.equals(estadisticas1[j][0])){
+                    entro = true;
+                }
+            }            
+            if(!entro){
+                System.out.println("1. No existe este archivo: "+rutaArchivo);
+            }
+            entro = false;
+            for (int j = 0; j < promedios.length; j++) {
+                if(rutaArchivo.equals(promedios[j][0])){
+                    entro = true;
+                }
+            }
+            if(!entro){
+                System.out.println("2. No existe este archivo: "+rutaArchivo);
+            }
+            entro = false;
+        }                        
+    }
     
     public boolean contiene_columna(String[][] columnas, String columna){
         for (int i = 0; i < columnas.length; i++) {            

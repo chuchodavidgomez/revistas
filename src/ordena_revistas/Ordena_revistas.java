@@ -16,6 +16,7 @@ public class Ordena_revistas {
         //v_c.llena_vect_estadisticas();
         //v_c.llena_estadisticas_revistas(); 
         v_c.llena_promedios();
+        //v_c.verifica_diferentes();
     }
     
 }

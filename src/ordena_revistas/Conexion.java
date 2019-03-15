@@ -150,7 +150,7 @@ public class Conexion
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
-            stats_columnas = new String[obtenerCantFilas(columnas)][3];            
+            stats_columnas = new String[obtenerCantFilas(columnas)][4];            
             int i = 0;                                       
             
             do{
