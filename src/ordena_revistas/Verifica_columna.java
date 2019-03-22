@@ -224,8 +224,8 @@ public class Verifica_columna {
                     x++;
                 }
                 //actualiza_estadisticas(columnas_guardadas,rutaArchivo); 
-                veri_column_repetida(columnas_guardadas, rutaArchivo);
-
+                //veri_column_repetida(columnas_guardadas, rutaArchivo);
+                veri_celda(columnas_guardadas,rutaArchivo);
             } catch (Exception e) {
                 //e.getMessage();
                 System.out.println("ocurrio este error2 " + e);
@@ -405,6 +405,53 @@ public class Verifica_columna {
         }
 
     }
+    
+    public void veri_celda(String[][] columnas_guardadas, String rutaArchivo){
+        String[][] guardados = new String[2][68];
+        String cadena = "INSERT INTO estadisticas_revistas ";
+        String columna = "(name_file, ";
+        String values = "('" + rutaArchivo + "', ";
+        int contador = 0;
+        int cont_repe = 0;
+        try {
+            for (int j = 0; j < 68; j++) {
+                if (columnas_guardadas[0][j] != null) {
+                    if (!verifica_repe(columnas_guardadas[0][j], guardados[0])) {
+                        guardados[0][cont_repe] = columnas_guardadas[0][j];
+                        cont_repe++;
+                        for (int k = 1; k < columnas_guardadas.length; k++) {
+                            if (columnas_guardadas[k][j] != null) {
+                                for (int i = 0; i < columnas_guardadas[k][j].length(); i++) {
+                                    if(guardados[1][cont_repe] == null){
+                                        guardados[1][cont_repe] = columnas_guardadas[k][j].charAt(0)+"";
+                                    }else{
+                                        for (int l = 0; l < 10; l++) {
+
+                                        }
+                                    }                                        
+                                }
+                            }
+                        }
+                        columna = columna + columnas_guardadas[0][j] + ", ";
+                        values = values + "'" + (float) contador / (columnas_guardadas.length - 1) + "', ";
+                        //System.out.println(columnas_guardadas[0][j]+": "+contador+"/"+(columnas_guardadas.length-1) + " %: "+  (float)contador/(columnas_guardadas.length-1));
+                        contador = 0;
+                    } else {
+                        //System.out.println("repetida ------------------------------>"+columnas_guardadas[0][j]);
+                    }
+                }
+            }
+            columna = columna.substring(0, columna.length() - 2) + ")";
+            values = values.substring(0, values.length() - 2) + ")";
+            cadena = cadena + columna + " VALUES " + values;
+            //System.out.println(cadena);
+            con.ejecuta_sql(cadena);
+        } catch (Exception e) {
+            //e.getMessage();
+            System.out.println("ocurrio este error " + e);
+        }
+    }
+        
 
     public boolean contiene_columna(String[][] columnas, String columna) {
         for (int i = 0; i < columnas.length; i++) {
