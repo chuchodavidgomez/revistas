@@ -178,7 +178,7 @@ public class Verifica_columna {
     public void llena_estadisticas_revistas() {
         String[][] columnas = con.getColumnas();
         String[][] columnas_guardadas = null;
-        for (int i = 100; i <= 181100; i = i + 100) {
+        for (int i = 100; i <= /*181*/100; i = i + 100) {
             // if(i == 79100 || i == 79600){
             String rutaArchivo = "sources/UL " + i + ".xls";
             System.out.println("archivo: " + rutaArchivo);
@@ -407,12 +407,14 @@ public class Verifica_columna {
     }
     
     public void veri_celda(String[][] columnas_guardadas, String rutaArchivo){
+        imprime_matrix(columnas_guardadas);
         String[][] guardados = new String[2][68];
         String cadena = "INSERT INTO estadisticas_revistas ";
         String columna = "(name_file, ";
         String values = "('" + rutaArchivo + "', ";
         int contador = 0;
         int cont_repe = 0;
+        System.out.println(columnas_guardadas[1][1]);
         try {
             for (int j = 0; j < 68; j++) {
                 if (columnas_guardadas[0][j] != null) {
@@ -423,18 +425,20 @@ public class Verifica_columna {
                             if (columnas_guardadas[k][j] != null) {
                                 for (int i = 0; i < columnas_guardadas[k][j].length(); i++) {
                                     if(guardados[1][cont_repe] == null){
+                                        System.out.println(columnas_guardadas[k][j]);
                                         guardados[1][cont_repe] = columnas_guardadas[k][j].charAt(0)+"";
                                     }else{
-                                        for (int l = 0; l < 10; l++) {
-
+                                        for (int p = 0; p < guardados[1][cont_repe].length(); p++) {
+                                            if(columnas_guardadas[k][j].charAt(i) != guardados[1][cont_repe].charAt(p)){
+                                                guardados[1][cont_repe] = guardados[1][cont_repe] + ", " + columnas_guardadas[k][j].charAt(i);
+                                            }
                                         }
                                     }                                        
                                 }
                             }
                         }
                         columna = columna + columnas_guardadas[0][j] + ", ";
-                        values = values + "'" + (float) contador / (columnas_guardadas.length - 1) + "', ";
-                        //System.out.println(columnas_guardadas[0][j]+": "+contador+"/"+(columnas_guardadas.length-1) + " %: "+  (float)contador/(columnas_guardadas.length-1));
+                        values = values + "'" + (float) contador / (columnas_guardadas.length - 1) + "', ";                        
                         contador = 0;
                     } else {
                         //System.out.println("repetida ------------------------------>"+columnas_guardadas[0][j]);
@@ -444,11 +448,25 @@ public class Verifica_columna {
             columna = columna.substring(0, columna.length() - 2) + ")";
             values = values.substring(0, values.length() - 2) + ")";
             cadena = cadena + columna + " VALUES " + values;
+            System.out.println(guardados[1][0]);
             //System.out.println(cadena);
-            con.ejecuta_sql(cadena);
+            //con.ejecuta_sql(cadena);
         } catch (Exception e) {
             //e.getMessage();
             System.out.println("ocurrio este error " + e);
+        }
+    }
+    
+    public void imprime_matrix(String[][] columnas_guardadas){
+        String valor = "";
+        for (int i = 0; i < columnas_guardadas.length; i++) {
+            for (int j = 0; j < 68; j++) {
+                if(columnas_guardadas[i][j] != null){
+                    valor = valor + columnas_guardadas[i][j] + "|";
+                }
+            }
+            System.out.println(valor);
+            valor = "";
         }
     }
         
