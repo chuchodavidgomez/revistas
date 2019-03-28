@@ -58,7 +58,22 @@ public class Conexion
         }       
     }
     
-    public void crearBd(String[] columnas)
+    public void creartb_estadisticas_generales_columnas()
+    {
+        try 
+        {
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_generales_columnas (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, columna varchar(100), total int(11), valores varchar(500)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            System.out.println(i);
+            Statement st = conn.createStatement();
+            st.execute(i);
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Ocurrio este error "+e.getMessage());
+        }
+    }
+    
+    public void creartb_distribucion_columnas(String[] columnas)
     {
         try 
         {
@@ -79,11 +94,11 @@ public class Conexion
         }
     }
     
-    public void crearbd_estadisticas(String[] columnas)
+    public void creartb_estadisticas_distribucion_columnas(String[] columnas)
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS estadisticas_revistas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_distribucion_columnas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
             for (int j = 0; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " FLOAT,";                    
@@ -100,9 +115,8 @@ public class Conexion
         }
     }
     
-    public void inserta_columnas(String[] columnas)
-    {
-        System.out.println("entre aqui");
+    public void inserta_valores_columnas(String[] columnas)
+    {       
         try 
         {   
             
@@ -140,7 +154,7 @@ public class Conexion
     }
     
     //métodos para obtener la información de todos los columnas
-    public String[][] getColumnas()
+    public String[][] get_estadisticas_generales_columnas()
     {
         String sql = "";        
         ResultSet columnas = null;
@@ -148,7 +162,7 @@ public class Conexion
         try 
         {            
             
-            sql = "SELECT * FROM columnas_estadisticas";           
+            sql = "SELECT * FROM estadisticas_generales_columnas";           
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
@@ -156,7 +170,7 @@ public class Conexion
             int i = 0;                                       
             
             do{
-                for (int j = 0; j < 3; j++) {
+                for (int j = 0; j < 4; j++) {
                     stats_columnas[i][j] = columnas.getString(j+1);
                 }
                 i++;
@@ -169,7 +183,7 @@ public class Conexion
         return stats_columnas;
     }
     
-    public String[][] getPromedios()
+    public String[][] get_estadisticas_distribucion_columnas()
     {
         String sql = "";        
         ResultSet columnas = null;
@@ -177,7 +191,7 @@ public class Conexion
         try 
         {            
             
-            sql = "SELECT * FROM estadisticas_revistas";   
+            sql = "SELECT * FROM estadisticas_distribucion_columnas";   
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
@@ -198,7 +212,7 @@ public class Conexion
         return stats_columnas;
     }
     
-    public String[][] getEstadisticas()
+    public String[][] get_distribucion_columnas()
     {
         String sql = "";        
         ResultSet columnas = null;
@@ -206,7 +220,7 @@ public class Conexion
         try 
         {            
             
-            sql = "SELECT * FROM columnas_revistas";   
+            sql = "SELECT * FROM distribucion_columnas";   
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
