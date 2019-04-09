@@ -228,6 +228,11 @@ public class Funciones_verificadora {
                             if (caract_guardados_locales[1][i] != null) {
                                 for (int k = 0; k < caract_guardados_locales[1][i].length(); k++) {
                                     for (int l = 0; l < caract_guardados_globales[1][j].length(); l++) {
+                                        String[] element_guardados = caract_guardados_locales[1][cont_repe].split("");                                                                                    
+                                        if(!verifica_repe(columnas_guardadas[k][j].charAt(i)+"", element_guardados)){
+                                            //System.out.println(caract_guardados_locales[1][cont_repe]);
+                                            caract_guardados_locales[1][cont_repe] = caract_guardados_locales[1][cont_repe] + columnas_guardadas[k][j].charAt(i);
+                                        }
                                         if(caract_guardados_locales[1][i].charAt(k) != caract_guardados_globales[1][j].charAt(l)){
                                             caract_guardados_globales[1][j] = caract_guardados_globales[1][j] + caract_guardados_locales[1][i].charAt(k);
                                         }
