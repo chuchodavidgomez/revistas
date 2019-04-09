@@ -45,9 +45,9 @@ public class Funciones_verificadora {
     public void verifica_columna_repetida() {
         //String[][] columnas = con.get_estadisticas_generales_columnas();
         String[][] columnas_guardadas = null;
-        for (int i = 100; i <= /*181*/100; i = i + 100) {            
+        for (int i = 100; i <= 181100; i = i + 100) {            
             String rutaArchivo = "sources/UL " + i + ".xls";
-            //System.out.println("archivo: " + rutaArchivo);
+            System.out.println("archivo: " + rutaArchivo);
             int contFila = 0;
             
             try {
@@ -90,6 +90,7 @@ public class Funciones_verificadora {
                 //imprime_matrix(columnas_guardadas);
                 //veri_column_repetida(columnas_guardadas, rutaArchivo);// no sirve con esta matrix
                 veri_celda(columnas_guardadas,rutaArchivo);// nor sirve con esta matrix
+                imprime_matrix(caract_guardados_globales);
             } catch (Exception e) {
                 System.out.println("ocurrio este error2 " + e);
             }            
@@ -190,7 +191,7 @@ public class Funciones_verificadora {
                                     }else{                    
                                         String[] element_guardados = caract_guardados_locales[1][cont_repe].split("");                                                                                    
                                         if(!verifica_repe(columnas_guardadas[k][j].charAt(i)+"", element_guardados)){
-                                            System.out.println(caract_guardados_locales[1][cont_repe]);
+                                            //System.out.println(caract_guardados_locales[1][cont_repe]);
                                             caract_guardados_locales[1][cont_repe] = caract_guardados_locales[1][cont_repe] + columnas_guardadas[k][j].charAt(i);
                                         }                                        
                                     }                                        
@@ -207,13 +208,36 @@ public class Funciones_verificadora {
             }
             columna = columna.substring(0, columna.length() - 2) + ")";
             values = values.substring(0, values.length() - 2) + ")";
-            cadena = cadena + columna + " VALUES " + values;
-            System.out.println(caract_guardados_locales[1][0]);
-            imprime_matrix(caract_guardados_locales);
+            cadena = cadena + columna + " VALUES " + values;            
+            actualiza_caract_globales(caract_guardados_locales);
             //System.out.println(cadena);
             //con.ejecuta_sql(cadena);
         } catch (Exception e) {
             System.out.println("ocurrio este error " + e);
+        }
+    }
+    
+    public void actualiza_caract_globales(String[][] caract_guardados_locales){
+        if(caract_guardados_globales[0][0]==null){
+            caract_guardados_globales = caract_guardados_locales;
+        }else{
+            for (int i = 0; i < 68; i++) {
+                for (int j = 0; j < 68; j++) {
+                    if (caract_guardados_locales[0][i] != null) {
+                        if (caract_guardados_locales[0][i].equals(caract_guardados_locales[0][j])){
+                            if (caract_guardados_locales[1][i] != null) {
+                                for (int k = 0; k < caract_guardados_locales[1][i].length(); k++) {
+                                    for (int l = 0; l < caract_guardados_globales[1][j].length(); l++) {
+                                        if(caract_guardados_locales[1][i].charAt(k) != caract_guardados_globales[1][j].charAt(l)){
+                                            caract_guardados_globales[1][j] = caract_guardados_globales[1][j] + caract_guardados_locales[1][i].charAt(k);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }                                                
+                }                
+            }
         }
     }
     
