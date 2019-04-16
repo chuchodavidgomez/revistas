@@ -17,11 +17,11 @@ public class Funciones_rellenadoras {
     int num_igual = 0;  
     
     public void llenatb_distribucion_columnas() {
-        String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas();
+        String[] columnas = con.get_columnas();
         String[] columnas_guardadas;
         for (int i = 100; i <= 181100; i = i + 100) {
             String rutaArchivo = "sources/UL " + i + ".xls";
-            System.out.println("archivo: " + rutaArchivo);                        
+            System.out.println("archivo: " + rutaArchivo);  
             try {
                 HSSFWorkbook wb = new HSSFWorkbook(new FileInputStream(rutaArchivo));
                 HSSFSheet sheet = wb.getSheetAt(0);                         
@@ -39,17 +39,17 @@ public class Funciones_rellenadoras {
                     contador_columnas = 0;
                     while (cellIterator.hasNext()) {                                              
                         cell = cellIterator.next();                        
-                        if (verifica_repe(cell.getStringCellValue().toLowerCase(),estadisticas_generales_columnas[0])) {
+                        if (verifica_repe(cell.getStringCellValue().toLowerCase(),columnas)) {
                             if (contador_columnas == 0) {
                                 columnas_guardadas[contador_columnas] = cell.getStringCellValue().toLowerCase();
                                 contador_columnas++;
-                                columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
+                                columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "pip").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
                                 values = values + "'1', ";
                             } else {
                                 if (!verifica_repe(cell.getStringCellValue().toLowerCase(), columnas_guardadas)) {
                                     columnas_guardadas[contador_columnas] = cell.getStringCellValue().toLowerCase();
                                     contador_columnas++;
-                                    columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
+                                    columna = columna + cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "pip").replaceAll("\\&", "y").replaceAll("\\/", "slash") + ", ";
                                     values = values + "'1', ";
                                 }
                             }
@@ -59,7 +59,8 @@ public class Funciones_rellenadoras {
                 }
                 columna = columna.substring(0, columna.length() - 2) + ")";
                 values = values.substring(0, values.length() - 2) + ")";
-                cadena = cadena + columna + " VALUES " + values;                
+                cadena = cadena + columna + " VALUES " + values;     
+                //System.out.println(cadena);
                 con.ejecuta_sql(cadena);
             } catch (Exception e) {
                 e.getMessage();
@@ -69,11 +70,11 @@ public class Funciones_rellenadoras {
     
     public void llena_columna_total_estadisticas_generales() {
         String[][] distribucion_columnas = con.get_distribucion_columnas();
-        String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas();
+        String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas2();
         int suma;
         String sql;
         for (int i = 0; i < estadisticas_generales_columnas.length; i++) {
-            sql = "UPDATE columnas_estadisticas SET ";
+            sql = "UPDATE estadisticas_generales_columnas SET ";
             suma = 0;
             for (int j = 0; j < distribucion_columnas.length; j++) {
                 if (distribucion_columnas[j][i] != null) {
@@ -82,13 +83,13 @@ public class Funciones_rellenadoras {
             }
             System.out.println("columna es " + estadisticas_generales_columnas[i][1]);
             sql = sql + "total='" + suma + "' WHERE id='" + estadisticas_generales_columnas[i][0] + "'";
-            System.out.println(sql);
-            //con.ejecuta_sql(sql);
+            //System.out.println(sql);
+            con.ejecuta_sql(sql);
         }
     }
     
     public void llenatb_estadisticas_distribucion_columnas() {
-        String[][] columnas = con.get_estadisticas_generales_columnas();
+        //String[][] columnas = con.get_estadisticas_generales_columnas2();
         String[][] columnas_guardadas = null;
         for (int i = 100; i <= 181100; i = i + 100) {            
             String rutaArchivo = "sources/UL " + i + ".xls";
@@ -120,7 +121,7 @@ public class Funciones_rellenadoras {
                         cell = cellIterator.next();
                         //System.out.println("-> "+cell.getStringCellValue().toLowerCase());
                         if (x == 0) {
-                            String column = cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash");
+                            String column = cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "pip").replaceAll("\\&", "y").replaceAll("\\/", "slash");
                             columnas_guardadas[x][y] = column;
                         } else {
                             if (!cell.getStringCellValue().toLowerCase().equals("null") & x != contFila) {
@@ -175,7 +176,7 @@ public class Funciones_rellenadoras {
             values = values.substring(0, values.length() - 2) + ")";
             cadena = cadena + columna + " VALUES " + values;
             //System.out.println(cadena);
-            con.ejecuta_sql(cadena);
+             con.ejecuta_sql(cadena);
         } catch (Exception e) {
             //e.getMessage();
             System.out.println("ocurrio este error " + e);
@@ -184,11 +185,11 @@ public class Funciones_rellenadoras {
     
     public void llena_columna_promedio_estadisticas_generales() {
         String[][] estadisticas = con.get_estadisticas_distribucion_columnas();
-        String[][] columnas = con.get_estadisticas_generales_columnas();
+        String[][] columnas = con.get_estadisticas_generales_columnas2();
         float suma;
         String sql;
         for (int i = 0; i < columnas.length; i++) {
-            sql = "UPDATE columnas_estadisticas SET ";
+            sql = "UPDATE estadisticas_generales_columnas SET ";
             suma = 0;
             for (int j = 0; j < estadisticas.length; j++) {
                 if (estadisticas[j][i] != null) {

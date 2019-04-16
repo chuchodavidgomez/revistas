@@ -21,10 +21,10 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    //private static String user = "root";
-    //private static String password = "";
-    private static String user = "chuchito";
-    private static String password = "root";
+    private static String user = "root";
+    private static String password = "";
+    //private static String user = "chuchito";
+    //private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -62,7 +62,7 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS estadisticas_generales_columnas (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, columna varchar(100), total int(11), valores varchar(500)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_generales_columnas (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, columna varchar(100), total int(11), promedio float(11), valores varchar(2500)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
             System.out.println(i);
             Statement st = conn.createStatement();
             st.execute(i);
@@ -77,7 +77,7 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS columnas_revistas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            String i = "CREATE TABLE IF NOT EXISTS distribucion_columnas (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
             for (int j = 0; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " VARCHAR(20),";                    
@@ -122,7 +122,7 @@ public class Conexion
             
             for (int j = 0; j < columnas.length; j++) {                
                 if(columnas[j] != null){
-                    String i = "INSERT INTO columnas_estadisticas (columna,total) VALUES ('" + columnas[j] + "','0');";                       
+                    String i = "INSERT INTO estadisticas_generales_columnas (columna,total) VALUES ('" + columnas[j] + "','0');";                       
                     System.out.println(i);
                     Statement st = conn.createStatement();
                     st.execute(i);
@@ -154,7 +154,34 @@ public class Conexion
     }
     
     //métodos para obtener la información de todos los columnas
-    public String[][] get_estadisticas_generales_columnas()
+    public String[] get_columnas()
+    {
+        String sql = "";        
+        ResultSet columnas = null;
+        String[] stats_columnas = null;
+        try 
+        {            
+            
+            sql = "SELECT * FROM estadisticas_generales_columnas";           
+            System.out.println(sql);
+            Statement st = conn.createStatement();                        
+            columnas = st.executeQuery(sql);            
+            stats_columnas = new String[obtenerCantFilas(columnas)];            
+            int i = 0;                                       
+            
+            do{                            
+                stats_columnas[i] = columnas.getString(2);
+                i++;
+            }while(columnas.next());
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stats_columnas;
+    }
+    
+    public String[][] get_estadisticas_generales_columnas2()
     {
         String sql = "";        
         ResultSet columnas = null;

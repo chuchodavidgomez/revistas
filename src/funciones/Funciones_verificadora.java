@@ -2,6 +2,8 @@
 package funciones;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 import ordena_revistas.Conexion;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -42,8 +44,10 @@ public class Funciones_verificadora {
         }
     }
     
-    public void verifica_columna_repetida() {
+    public void verifica_columna_repetida() throws FileNotFoundException, IOException {
         //String[][] columnas = con.get_estadisticas_generales_columnas();
+        String[] columnas = con.get_columnas();
+        caract_guardados_globales[0] = columnas;        
         String[][] columnas_guardadas = null;
         for (int i = 100; i <= 181100; i = i + 100) {            
             String rutaArchivo = "sources/UL " + i + ".xls";
@@ -90,11 +94,13 @@ public class Funciones_verificadora {
                 //imprime_matrix(columnas_guardadas);
                 //veri_column_repetida(columnas_guardadas, rutaArchivo);// no sirve con esta matrix
                 veri_celda(columnas_guardadas,rutaArchivo);// nor sirve con esta matrix
-                imprime_matrix(caract_guardados_globales);
+                
+                
             } catch (Exception e) {
                 System.out.println("ocurrio este error2 " + e);
-            }            
+            }       
         }
+        imprime_matrix(caract_guardados_globales);
         System.out.println("archivos con valores diferentes en las columnas repetidas --------------------->" + num_diferentes_global); 
         System.out.println("El numero maximo de columna repetida es ----------------->"+ cont_columnas_repe/2);
     }
@@ -169,80 +175,72 @@ public class Funciones_verificadora {
     }
     
     public void veri_celda(String[][] columnas_guardadas, String rutaArchivo){
-        //imprime_matrix(columnas_guardadas);
+        //imprime_matrix(columnas_guardadas);        
         String[][] caract_guardados_locales = new String[2][68];
+        
         String cadena = "INSERT INTO estadisticas_revistas ";
         String columna = "(name_file, ";
         String values = "('" + rutaArchivo + "', ";
         int cont_repe = 0;        
-        try {
-            for (int j = 0; j < 68; j++) {
-                if (columnas_guardadas[0][j] != null) {
-                    if (!verifica_repe(columnas_guardadas[0][j], caract_guardados_locales[0])) {
-                        caract_guardados_locales[0][cont_repe] = columnas_guardadas[0][j];                                              
-                        for (int k = 1; k < columnas_guardadas.length; k++) {
-                            //System.out.println(".");
-                            if (columnas_guardadas[k][j] != null) {
-                                for (int i = 0; i < columnas_guardadas[k][j].length(); i++) {
-                                    //System.out.println("..");
-                                    if(caract_guardados_locales[1][cont_repe] == null){
-                                        //System.out.println(columnas_guardadas[k][j]);
-                                        caract_guardados_locales[1][cont_repe] = columnas_guardadas[k][j].charAt(0)+"";
-                                    }else{                    
-                                        String[] element_guardados = caract_guardados_locales[1][cont_repe].split("");                                                                                    
-                                        if(!verifica_repe(columnas_guardadas[k][j].charAt(i)+"", element_guardados)){
-                                            //System.out.println(caract_guardados_locales[1][cont_repe]);
-                                            caract_guardados_locales[1][cont_repe] = caract_guardados_locales[1][cont_repe] + columnas_guardadas[k][j].charAt(i);
-                                        }                                        
+       
+        for (int j = 0; j < 68; j++) {
+            if (columnas_guardadas[0][j] != null) {
+                if (!verifica_repe(columnas_guardadas[0][j], caract_guardados_locales[0])) {
+                    caract_guardados_locales[0][cont_repe] = columnas_guardadas[0][j];                                              
+                    for (int k = 1; k < columnas_guardadas.length; k++) {
+                        //System.out.println(".");
+                        if (columnas_guardadas[k][j] != null) {
+                            String[] element_guardados = null;
+                            for (int i = 0; i < columnas_guardadas[k][j].length(); i++) {
+                                //System.out.println("..");
+                                if(caract_guardados_locales[1][cont_repe] == null){
+                                    //System.out.println(columnas_guardadas[k][j]);
+                                    caract_guardados_locales[1][cont_repe] = columnas_guardadas[k][j].charAt(0)+"";
+                                    
+                                }else{                    
+                                    element_guardados = caract_guardados_locales[1][cont_repe].split("");                                                              
+                                    if(!verifica_repe(columnas_guardadas[k][j].charAt(i)+"", element_guardados)){
+                                        //System.out.println(caract_guardados_locales[1][cont_repe]);
+                                        caract_guardados_locales[1][cont_repe] = caract_guardados_locales[1][cont_repe] + columnas_guardadas[k][j].charAt(i);
                                     }                                        
-                                }
+                                }                                        
                             }
                         }
-                        cont_repe++;
-                        //columna = columna + columnas_guardadas[0][j] + ", ";
-                        //values = values + "'" + (float) contador / (columnas_guardadas.length - 1) + "', ";                        
-                    } else {
-                        //System.out.println("repetida ------------------------------>"+columnas_guardadas[0][j]);
                     }
+                    cont_repe++;
+                    //columna = columna + columnas_guardadas[0][j] + ", ";
+                    //values = values + "'" + (float) contador / (columnas_guardadas.length - 1) + "', ";                        
+                } else {
+                    //System.out.println("repetida ------------------------------>"+columnas_guardadas[0][j]);
                 }
             }
-            columna = columna.substring(0, columna.length() - 2) + ")";
-            values = values.substring(0, values.length() - 2) + ")";
-            cadena = cadena + columna + " VALUES " + values;            
-            actualiza_caract_globales(caract_guardados_locales);
-            //System.out.println(cadena);
-            //con.ejecuta_sql(cadena);
-        } catch (Exception e) {
-            System.out.println("ocurrio este error " + e);
         }
+        columna = columna.substring(0, columna.length() - 2) + ")";
+        values = values.substring(0, values.length() - 2) + ")";
+        cadena = cadena + columna + " VALUES " + values;            
+        actualiza_caract_globales(caract_guardados_locales);
+        //System.out.println(cadena);
+        //con.ejecuta_sql(cadena);        
     }
     
-    public void actualiza_caract_globales(String[][] caract_guardados_locales){
-        if(caract_guardados_globales[0][0]==null){
-            caract_guardados_globales = caract_guardados_locales;
-        }else{
-            for (int i = 0; i < 68; i++) {
-                for (int j = 0; j < 68; j++) {
-                    if (caract_guardados_locales[0][i] != null) {
-                        if (caract_guardados_locales[0][i].equals(caract_guardados_locales[0][j])){
-                            if (caract_guardados_locales[1][i] != null) {
-                                for (int k = 0; k < caract_guardados_locales[1][i].length(); k++) {
-                                    for (int l = 0; l < caract_guardados_globales[1][j].length(); l++) {
-                                        String[] element_guardados = caract_guardados_locales[1][cont_repe].split("");                                                                                    
-                                        if(!verifica_repe(columnas_guardadas[k][j].charAt(i)+"", element_guardados)){
-                                            //System.out.println(caract_guardados_locales[1][cont_repe]);
-                                            caract_guardados_locales[1][cont_repe] = caract_guardados_locales[1][cont_repe] + columnas_guardadas[k][j].charAt(i);
-                                        }
-                                        if(caract_guardados_locales[1][i].charAt(k) != caract_guardados_globales[1][j].charAt(l)){
-                                            caract_guardados_globales[1][j] = caract_guardados_globales[1][j] + caract_guardados_locales[1][i].charAt(k);
-                                        }
-                                    }
-                                }
-                            }
+    public void actualiza_caract_globales(String[][] caract_guardados_locales){        
+        for (int i = 0; i < 68; i++) {
+            for (int j = 0; j < 68; j++) {
+                if (caract_guardados_locales[0][i] != null) {
+                    if (caract_guardados_locales[0][i].equals(caract_guardados_globales[0][j])){
+                        if (caract_guardados_globales[1][j] != null) {              
+                            String[] element_guardados = caract_guardados_globales[1][j].split(""); 
+                            for (int l = 0; l < caract_guardados_locales[1][i].length(); l++) {                                                                                                                   
+                                if(!verifica_repe(caract_guardados_locales[1][i].charAt(l)+"", element_guardados)){                                            
+                                    caract_guardados_globales[1][j] = caract_guardados_globales[1][j] + caract_guardados_locales[1][i].charAt(l);
+                                }                                        
+                            }                                
+                        }else{
+                            caract_guardados_globales[1][j] = caract_guardados_locales[1][i];
                         }
-                    }                                                
-                }                
-            }
+                    }
+                }                                                
+            }                
         }
     }
     
