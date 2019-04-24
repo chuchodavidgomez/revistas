@@ -178,6 +178,7 @@ public class Funciones_verificadora {
         //imprime_matrix(columnas_guardadas);        
         String[][] caract_guardados_locales = new String[2][68];
         
+        //en el las funciones generadoras se debe generar los caracteres generales, pero primero organizar el codigo de tal forma que tenga un metodo que crea la matriz del excel ccoco
         String cadena = "UPDATE INTO estadisticas_generales_columnas SET";
         String columna = "(name_file, ";
         String values = "('" + rutaArchivo + "', ";
