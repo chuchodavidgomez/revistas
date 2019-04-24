@@ -115,6 +115,27 @@ public class Conexion
         }
     }
     
+    public void creartb_estadisticas_celdas_diferentes(String[] columnas)
+    {
+        try 
+        {
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_celdas_diferentes (name_file VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            for (int j = 0; j < columnas.length; j++) {
+                if(columnas[j] != null){
+                    i = i + columnas[j] + " FLOAT,";                    
+                }                    
+            }    
+            i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            System.out.println(i);
+            Statement st = conn.createStatement();
+            st.execute(i);
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Ocurrio este error "+e.getMessage());
+        }
+    }
+    
     public void inserta_valores_columnas(String[] columnas)
     {       
         try 

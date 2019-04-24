@@ -53,6 +53,7 @@ public class Funciones_generadoras {
         System.out.println("Contador de columnas: " + contador_columnas);
         con.creartb_distribucion_columnas(valores_columnas);
         con.creartb_estadisticas_distribucion_columnas(valores_columnas);
+        con.creartb_estadisticas_celdas_diferentes(valores_columnas);
     }
     
     public void actualizar_vec(String celda) {
