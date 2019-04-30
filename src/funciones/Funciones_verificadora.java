@@ -57,6 +57,7 @@ public class Funciones_verificadora {
         caract_guardados_globales[0] = columnas;
         imprime_matrix(caract_guardados_globales);
         String[][] columnas_guardadas = null;
+        int opt1 = JOptionPane.showConfirmDialog(null,"Desea generar los caracteres de las celdas:\n");
         for (int i = 100; i <= 181100; i = i + 100) {
             String rutaArchivo = "sources/UL " + i + ".xls";
             System.out.println("archivo: " + rutaArchivo);
@@ -100,19 +101,23 @@ public class Funciones_verificadora {
                     y = 0;
                     x++;
                 }
-                //imprime_matrix(columnas_guardadas);
-                //veri_column_repetida(columnas_guardadas, rutaArchivo);// no sirve con esta matrix
-                String opt = JOptionPane.showInputDialog("desea revisar celdad:\n");
-                veri_celda(columnas_guardadas, rutaArchivo);// nor sirve con esta matrix
-
+         
+                if(opt1==0){
+                    veri_celda(columnas_guardadas, rutaArchivo);
+                }else{
+                    veri_column_repetida(columnas_guardadas, rutaArchivo);
+                }
+                
             } catch (FileNotFoundException e) {
                 System.out.println("ocurrio este error2 " + e);
             }
         }
-        //imprime_matrix(caract_guardados_globales);
-        guarda_valores_celdes(caract_guardados_globales);
-        System.out.println("archivos con valores diferentes en las columnas repetidas --------------------->" + num_diferentes_global);
-        System.out.println("El numero maximo de columna repetida es ----------------->" + cont_columnas_repe / 2);
+        if(opt1 == 0){
+            guarda_valores_celdes(caract_guardados_globales);
+        }else{
+            System.out.println("archivos con valores diferentes en las columnas repetidas --------------------->" + num_diferentes_global);
+            System.out.println("El numero maximo de columna repetida es ----------------->" + cont_columnas_repe / 2);
+        }                
     }
 
     public void veri_column_repetida(String[][] columnas_guardadas, String rutaArchivo) {

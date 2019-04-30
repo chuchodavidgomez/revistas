@@ -10,7 +10,6 @@ import javax.swing.JOptionPane;
 public class Ordena_revistas {
 
     public static void main(String[] args) throws IOException{
-                        
         String opt = JOptionPane.showInputDialog("Ingrese la opción:\n"
                 + "1.Genera tablas\n"
                 + "2.LLenar columnas\n"
@@ -26,12 +25,14 @@ public class Ordena_revistas {
                 //fr.llenatb_distribucion_columnas();
                 //fr.llena_columna_total_estadisticas_generales();
                 //fr.llenatb_estadisticas_distribucion_columnas();
-                //fr.llena_columna_promedio_estadisticas_generales();
+                //fr.llena_columna_promedio_estadisticas_generales()
+                //fr.llenatb_estadisticas_celdas_diferentes();
+                fr.llena_columna_valores_estadisticas_generales();
                 break;
             case "3":
                 Funciones_verificadora fv = new Funciones_verificadora();
                 //fv.verifica_diferentes();
-                fv.verifica_columna_repetida();
+                //fv.verifica_columna_repetida();
                 break;
             case "4":
                 //gd.writeTxt();

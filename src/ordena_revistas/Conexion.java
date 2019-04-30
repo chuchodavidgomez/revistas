@@ -288,6 +288,35 @@ public class Conexion
         }
         return stats_columnas;
     }
+    
+    public String[][] get_distribucion_caracteres()
+    {
+        String sql = "";        
+        ResultSet columnas = null;
+        String[][] stats_columnas = null;
+        try 
+        {            
+            
+            sql = "SELECT * FROM estadisticas_celdas_diferentes";   
+            System.out.println(sql);
+            Statement st = conn.createStatement();                        
+            columnas = st.executeQuery(sql);            
+            stats_columnas = new String[obtenerCantFilas(columnas)][68];            
+            int i = 0;                                       
+            
+            do{
+                for (int j = 1; j < 68; j++) {
+                    stats_columnas[i][j-1] = columnas.getString(j+1);
+                }
+                i++;
+            }while(columnas.next());
+        } 
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stats_columnas;
+    }
         
     public int obtenerCantFilas(ResultSet resultSet) throws SQLException
     {
