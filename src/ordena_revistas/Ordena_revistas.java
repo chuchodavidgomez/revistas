@@ -18,7 +18,8 @@ public class Ordena_revistas {
         switch(opt){
             case "1":
                 Funciones_generadoras fg = new Funciones_generadoras();
-                fg.genera_tablas();
+                //fg.genera_tablas();
+                fg.genera_matriz();
                 break;
             case "2":
                 Funciones_rellenadoras fr = new Funciones_rellenadoras();
