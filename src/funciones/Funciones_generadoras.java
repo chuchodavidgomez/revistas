@@ -107,10 +107,10 @@ public class Funciones_generadoras {
                             if (element_separados.length > 1) {
                                 if (element_separados.length > max_separador) {
                                     max_separador = element_separados.length;
-                                }
+                                }/*
                                 if (max_separador == 362) {
                                     System.out.println("se encuentra en ----> " + rutaArchivo + " columna " + columnas_guardadas[0][j] + " num " + k);
-                                }
+                                }*/
                             }
                         }
                     }
