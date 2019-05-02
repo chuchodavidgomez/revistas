@@ -60,7 +60,8 @@ public class Funciones_varias {
                 while (cellIterator.hasNext()) {
                     cell = cellIterator.next();
                     if (x == 0) {
-                        String column = cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash");
+                        String column = cell.getStringCellValue().toLowerCase();
+                        //String column = cell.getStringCellValue().toLowerCase().replaceAll(" ", "_").replaceAll("\\(", "ppp").replaceAll("\\)", "ppp").replaceAll("\\&", "y").replaceAll("\\/", "slash");
                         columnas_guardadas[x][y] = column;
                     } else {
                         if (!cell.getStringCellValue().toLowerCase().equals("null") & x != contFila) {
