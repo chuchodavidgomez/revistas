@@ -225,7 +225,7 @@ public class Funciones_rellenadoras {
                     x++;
                 }
                 actualizatb_estadisticas_celdas_diferentes(columnas_guardadas, rutaArchivo);
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 System.out.println("ocurrio este error2 " + e);
             }
         }
