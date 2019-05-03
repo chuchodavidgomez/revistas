@@ -21,10 +21,10 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    //private static String user = "root";
-    //private static String password = "";
-    private static String user = "chuchito";
-    private static String password = "root";
+    private static String user = "root";
+    private static String password = "";
+    //private static String user = "chuchito";
+    //private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -62,7 +62,7 @@ public class Conexion
     {
         try 
         {
-            String i = "CREATE TABLE IF NOT EXISTS estadisticas_generales_columnas (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, columna varchar(100), total int(11), promedio float(11), valores varchar(2500)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            String i = "CREATE TABLE IF NOT EXISTS estadisticas_generales_columnas (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, columna varchar(100), total int(11), promedio float(11), valores float(11), separadores int(11)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
             System.out.println(i);
             Statement st = conn.createStatement();
             st.execute(i);
@@ -214,11 +214,11 @@ public class Conexion
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
-            stats_columnas = new String[obtenerCantFilas(columnas)][4];            
+            stats_columnas = new String[obtenerCantFilas(columnas)][5];            
             int i = 0;                                       
             
             do{
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 5; j++) {
                     stats_columnas[i][j] = columnas.getString(j+1);
                 }
                 i++;

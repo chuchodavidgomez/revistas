@@ -87,6 +87,7 @@ public class Funciones_generadoras {
                 veri_separador(columnas_guardadas, rutaArchivo);
             }
         }
+        llena_columna_separadores_estadisticas_generales();
         imprime_matrix(separadores_guardados_globales);
     }
 
@@ -146,6 +147,20 @@ public class Funciones_generadoras {
                 }
             }
         }
+    }
+    
+    public void llena_columna_separadores_estadisticas_generales() {
+        String sql;
+        for (int i = 0; i < separadores_guardados_globales[0].length; i++) {
+            sql = "UPDATE estadisticas_generales_columnas SET ";         
+            sql = sql + "separadores='" + separadores_guardados_globales[1][i] + "' WHERE columna='" + separadores_guardados_globales[0][i] + "'";
+            //System.out.println(sql);
+            con.ejecuta_sql(sql);
+        }
+    }
+    
+    public void genera_archivo(){
+        String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas2();
     }
 
     public boolean verifica_repe(String celda, String[] columnas_guardadas) {
