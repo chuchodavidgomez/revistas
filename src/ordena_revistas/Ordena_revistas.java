@@ -23,13 +23,13 @@ public class Ordena_revistas {
                 fg.genera_archivo();
                 break;
             case "2":
-                Funciones_rellenadoras fr = new Funciones_rellenadoras();/*
-                fr.llenatb_distribucion_columnas();
-                fr.llena_columna_total_estadisticas_generales();
-                fr.llenatb_estadisticas_distribucion_columnas();*/
-                fr.llena_columna_promedio_estadisticas_generales();
-                fr.llenatb_estadisticas_celdas_diferentes();
-                //fr.llena_columna_valores_estadisticas_generales();
+                Funciones_rellenadoras fr = new Funciones_rellenadoras();
+                //fr.llenatb_distribucion_columnas();
+                //fr.llena_columna_total_estadisticas_generales();
+                //fr.llenatb_estadisticas_distribucion_columnas();
+                //fr.llena_columna_promedio_estadisticas_generales()
+                //fr.llenatb_estadisticas_celdas_diferentes();
+                fr.llena_columna_valores_estadisticas_generales();
                 break;
             case "3":
                 Funciones_verificadora fv = new Funciones_verificadora();
