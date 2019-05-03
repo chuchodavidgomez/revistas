@@ -161,6 +161,41 @@ public class Funciones_generadoras {
     
     public void genera_archivo(){
         String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas2();
+        int columnas = 0;
+        int cont = 0;
+        int cont_columna = 0;
+        int cont_replicas = 0;
+        for (int i = 0; i < estadisticas_generales_columnas.length; i++) {
+            if(Integer.parseInt(estadisticas_generales_columnas[i][5]) == 0){
+                columnas = columnas + 1;
+            }else{
+                columnas = columnas + Integer.parseInt(estadisticas_generales_columnas[i][5]);
+            }
+            
+        }
+        String archivo[][] = new String[181100][columnas];        
+        System.out.println(archivo[0].length);
+        while(cont != archivo[0].length){
+            if(Integer.parseInt(estadisticas_generales_columnas[cont_columna][5]) == 0){
+                cont_replicas = 1;
+            }else{
+                cont_replicas = Integer.parseInt(estadisticas_generales_columnas[cont_columna][5]);
+            }
+            
+            for (int i = 0; i < cont_replicas; i++) {
+                if(i == 0){
+                    archivo[0][cont] = estadisticas_generales_columnas[cont_columna][1];
+                }else{
+                    archivo[0][cont] = estadisticas_generales_columnas[cont_columna][1] + " " + i;
+                }
+                
+                cont++;
+            }
+            cont_columna++;
+        }
+        System.out.println(archivo[0][896]);
+        //imprime_matrix(archivo);
+        
     }
 
     public boolean verifica_repe(String celda, String[] columnas_guardadas) {
@@ -175,7 +210,7 @@ public class Funciones_generadoras {
     public void imprime_matrix(String[][] columnas_guardadas) {
         String valor = "";
         for (int i = 0; i < columnas_guardadas.length; i++) {
-            for (int j = 0; j < 68; j++) {
+            for (int j = 0; j < columnas_guardadas[0].length; j++) {
                 if (columnas_guardadas[i][j] != null) {
                     valor = valor + columnas_guardadas[i][j] + "|";
                 }

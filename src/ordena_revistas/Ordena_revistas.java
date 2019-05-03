@@ -19,7 +19,8 @@ public class Ordena_revistas {
             case "1":
                 Funciones_generadoras fg = new Funciones_generadoras();
                 //fg.genera_tablas();
-                fg.genera_matriz();
+                //fg.genera_matriz();
+                fg.genera_archivo();
                 break;
             case "2":
                 Funciones_rellenadoras fr = new Funciones_rellenadoras();

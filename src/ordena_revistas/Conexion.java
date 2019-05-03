@@ -214,11 +214,11 @@ public class Conexion
             System.out.println(sql);
             Statement st = conn.createStatement();                        
             columnas = st.executeQuery(sql);            
-            stats_columnas = new String[obtenerCantFilas(columnas)][5];            
+            stats_columnas = new String[obtenerCantFilas(columnas)][6];            
             int i = 0;                                       
             
             do{
-                for (int j = 0; j < 5; j++) {
+                for (int j = 0; j < 6; j++) {
                     stats_columnas[i][j] = columnas.getString(j+1);
                 }
                 i++;
