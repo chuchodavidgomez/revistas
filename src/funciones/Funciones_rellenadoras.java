@@ -287,7 +287,6 @@ public class Funciones_rellenadoras {
         }
     }
 
-    //terminar
     public void llena_columna_valores_estadisticas_generales() {
         String[][] estadisticas = con.get_distribucion_caracteres();
         String[] columnas = con.get_columnas();
