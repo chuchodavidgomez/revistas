@@ -5,6 +5,7 @@ import java.io.IOException;
 import funciones.Funciones_generadoras;
 import funciones.Funciones_rellenadoras;
 import funciones.Funciones_verificadora;
+import funciones.Funciones_varias;
 import javax.swing.JOptionPane;
 
 public class Ordena_revistas {
@@ -38,6 +39,8 @@ public class Ordena_revistas {
                 break;
             case "4":
                 //gd.writeTxt();
+                Funciones_varias fva = new Funciones_varias();
+                fva.prueba_automatizacion();
                 break;
             default:
                 break;

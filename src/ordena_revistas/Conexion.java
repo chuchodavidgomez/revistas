@@ -21,10 +21,10 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    //private static String user = "root";
-    //private static String password = "";
-    private static String user = "chuchito";
-    private static String password = "root";
+    private static String user = "root";
+    private static String password = "";
+    //private static String user = "chuchito";
+    //private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
