@@ -3,7 +3,6 @@ package funciones;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
@@ -97,36 +96,34 @@ public class Funciones_varias {
         final WebClient webClient = new WebClient();
 
         try {
-            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.getOptions().setJavaScriptEnabled(false);
             webClient.getOptions().setCssEnabled(false);
             //Pagina donde se hara la consulta
-            System.out.println("-----------"+webClient.getOptions().toString());
-            HtmlPage page1 = webClient.getPage("http://ulrichsweb.serialssolutions.com/search/1786591");
+            HtmlPage page1 = webClient.getPage("https://www.google.com/webhp");
             
             //nombre del formulario
             final HtmlForm form = page1.getForms().get(0);
             //el valor "f" no es arbitrario es el nombre del formulario web de google
-            //DomElement domElement = page1.getElementById("cb_list");
-            //domElement.click();
+            
             //nombre de la caja de texto
-            //final HtmlTextInput textField = form.getInputByName("q");
+            final HtmlTextInput textField = form.getInputByName("q");
             //el valor "q" no es arbitrario es el nombre de la caja de texto del formulario web de google
 
             //nombre del boton del formulario
-            //final HtmlSubmitInput button = form.getInputByName("btnK");
+            final HtmlSubmitInput button = form.getInputByName("btnK");
             //el valor "btnG" no es arbitrario es el nombre del boton del formulario web de google
                         
             //llenamos la caja de texto
-            //textField.setValueAttribute("usandojava");
+            textField.setValueAttribute("usandojava");
 
             //Creamos la pagina que nos devolverá el resultado
             HtmlPage pageResultado;
             
             //hacemos clic en el boton del formulario y asignamos el resultado a la pagina pageResultado
-            //pageResultado = button.click();
+            pageResultado = button.click();
             
             //imprimimos el resultado
-            System.out.println(page1.asText());
+            System.out.println(pageResultado.asText());
             
             //cerramos el navegador emulado, para liberar todo esto de la memoria
             webClient.close();
