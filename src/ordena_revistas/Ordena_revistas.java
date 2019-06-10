@@ -20,7 +20,7 @@ public class Ordena_revistas {
             case "1":
                 Funciones_generadoras fg = new Funciones_generadoras();
                 //fg.genera_tablas();
-                //fg.genera_matriz();
+                //fg.genera_matriz();//verifica la cantidad de separadores
                 fg.genera_archivo();
                 break;
             case "2":

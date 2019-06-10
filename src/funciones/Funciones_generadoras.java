@@ -1,8 +1,14 @@
 package funciones;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -17,7 +23,8 @@ public class Funciones_generadoras {
     Funciones_varias fv = new Funciones_varias();
     String[][] separadores_guardados_globales = new String[2][68];
     int contador_columnas = 0;
-
+    String archivo[][] = null;
+    
     public void genera_tablas() {
         int cont2 = 1;
         for (int i = 100; i <= 181100; i = i + 100) {
@@ -87,13 +94,57 @@ public class Funciones_generadoras {
                 veri_separador(columnas_guardadas, rutaArchivo);
             }
         }
-        llena_columna_separadores_estadisticas_generales();
+        //llena_columna_separadores_estadisticas_generales();
         imprime_matrix(separadores_guardados_globales);
+    }
+    
+    public int almacena_archivo(String[][] columnas_guardadas, int puntero) {        
+        String[] columnas_guar = new String[68];        
+        String[] element_separados = null;
+        int cont_repe = 0;
+        
+        for (int j = 0; j < 1069; j++) {//recorre todas las columnas del archivo            
+            for (int i = 0; i < 68; i++) {          
+                //System.out.println(".");
+                if(columnas_guardadas[0][i] != null){
+                    //System.out.println("..");
+                    //primero verificar que la columna de archivo corresponda                     
+                    if (archivo[0][j].equals(columnas_guardadas[0][i])) {
+                        //System.out.println("...");
+                        if (!verifica_repe(columnas_guardadas[0][i], columnas_guar) ) {
+                            //System.out.println("....");
+                            columnas_guar[cont_repe] = columnas_guardadas[0][i];
+                            //verificar como evitar la anulacion
+                            for (int k = puntero; k < columnas_guardadas.length+(puntero-1); k++) {
+                                //System.out.println(".....");
+                                if (columnas_guardadas[k-(puntero-1)][i] != null) {
+                                    element_separados = columnas_guardadas[k-(puntero-1)][i].split("\\|");
+                                    if (element_separados.length > 1) {
+                                        //System.out.println(".......");
+                                        for (int l = 0; l < element_separados.length; l++) {
+                                            archivo[k][j+l] = element_separados[l];  
+                                            //System.out.print("a");
+                                        }   
+                                        
+                                    }else{
+                                        //System.out.println("......");
+                                        archivo[k][j] = columnas_guardadas[k-(puntero-1)][i];                                                   
+                                    }
+                                }
+                                
+                            }                                 
+                            cont_repe++;
+                            break;
+                        }                  
+                    }
+                }
+            }            
+        }                
+        return columnas_guardadas.length;
     }
 
     public void veri_separador(String[][] columnas_guardadas, String rutaArchivo) {
-        String[][] separadores_guardados_locales = new String[2][68];
-        //en el las funciones generadoras se debe generar los caracteres generales, pero primero organizar el codigo de tal forma que tenga un metodo que crea la matriz del excel ccoco
+        String[][] separadores_guardados_locales = new String[2][68];        
         String[] element_separados = null;
         int cont_repe = 0;
         int max_separador = 0;
@@ -159,12 +210,13 @@ public class Funciones_generadoras {
         }
     }
     
-    public void genera_archivo(){
+    public void genera_archivo() throws IOException{
         String[][] estadisticas_generales_columnas = con.get_estadisticas_generales_columnas2();
         int columnas = 0;
         int cont = 0;
         int cont_columna = 0;
         int cont_replicas = 0;
+        //cuenta la cantidad de columnas
         for (int i = 0; i < estadisticas_generales_columnas.length; i++) {
             if(Integer.parseInt(estadisticas_generales_columnas[i][5]) == 0){
                 columnas = columnas + 1;
@@ -173,8 +225,9 @@ public class Funciones_generadoras {
             }
             
         }
-        String archivo[][] = new String[181100][columnas];        
+        archivo = new String[181101][columnas];        
         System.out.println(archivo[0].length);
+        
         while(cont != archivo[0].length){
             if(Integer.parseInt(estadisticas_generales_columnas[cont_columna][5]) == 0){
                 cont_replicas = 1;
@@ -193,9 +246,57 @@ public class Funciones_generadoras {
             }
             cont_columna++;
         }
-        System.out.println(archivo[0][896]);
-        //imprime_matrix(archivo);
         
+        String[][] columnas_guardadas = null;
+        int puntero = 1;
+        for (int i = 100; i <= 181100; i = i + 100) {
+            String rutaArchivo = "sources/UL " + i + ".xls";
+            columnas_guardadas = fv.genera_matrix(rutaArchivo);
+            if (columnas_guardadas != null) {
+                puntero = almacena_archivo(columnas_guardadas, puntero);
+            }
+        }
+        genera_archivocsv();
+        //imprime_matrix(archivo);        
+    }
+    
+    public void genera_archivocsv(){
+        BufferedWriter out = null;
+        try {
+            String ruta = "datos.csv";
+            File fichero = new File(ruta);
+            BufferedWriter bw;            
+            
+            if (fichero.exists()) {                
+                fichero.delete();                
+            }
+            
+            bw = new BufferedWriter(new FileWriter(fichero));
+            bw.close();
+            
+            out = new BufferedWriter(
+                new OutputStreamWriter(
+                        new FileOutputStream(ruta, true), // true to append
+                        StandardCharsets.UTF_8 // Set encoding
+                )
+            );
+
+            for (int j = 0; j < archivo.length; j++) {
+                for (int i = 0; i < archivo[0].length; i++) {
+                    if (archivo[j][i] != null) {                        
+                        out.write(archivo[j][i].replaceAll(";", ""));
+                    }   
+                    if(archivo[0].length-1 != i){
+                        out.write(";");
+                    }
+                }                
+                out.flush();
+                out.newLine();                
+            }
+
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean verifica_repe(String celda, String[] columnas_guardadas) {

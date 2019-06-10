@@ -21,10 +21,10 @@ public class Conexion
     //Información necesaria para poder conectarse con la base de datos
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
-    private static String user = "root";
-    private static String password = "";
-    //private static String user = "chuchito";
-    //private static String password = "root";
+    //private static String user = "root";
+    //private static String password = "";
+    private static String user = "chuchito";
+    private static String password = "root";
     private static String url = "jdbc:mysql://localhost/datosudea";    
 
     //Metodo encargado de conectarse con la base de datos
@@ -123,6 +123,28 @@ public class Conexion
             for (int j = 0; j < columnas.length; j++) {
                 if(columnas[j] != null){
                     i = i + columnas[j] + " FLOAT,";                    
+                }                    
+            }    
+            i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
+            System.out.println(i);
+            Statement st = conn.createStatement();
+            st.execute(i);
+        } 
+        catch (Exception e) 
+        {
+            System.out.println("Ocurrio este error "+e.getMessage());
+        }
+    }
+    
+    
+    //too many columns
+    public void creartb_final(String[] columnas) {
+        try 
+        {
+            String i = "CREATE TABLE IF NOT EXISTS tabla_final (title_id VARCHAR(50) NOT NULL PRIMARY KEY, ";
+            for (int j = 1; j < columnas.length; j++) {
+                if(columnas[j] != null){
+                    i = i + columnas[j] + " text(50),";                    
                 }                    
             }    
             i = i.substring(0, i.length()-1)+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_spanish_ci";
@@ -324,6 +346,6 @@ public class Conexion
         int filas = resultSet.getRow();
         resultSet.first();
         return filas;
-    }
+    }    
     
 }
