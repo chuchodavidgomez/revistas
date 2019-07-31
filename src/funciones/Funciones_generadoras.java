@@ -227,7 +227,8 @@ public class Funciones_generadoras {
         }
         archivo = new String[181101][columnas];        
         System.out.println(archivo[0].length);
-        
+                
+        //Aqui se genera las columnas, se debe colocar un if para verificar las columnas que se van a guardar
         while(cont != archivo[0].length){
             if(Integer.parseInt(estadisticas_generales_columnas[cont_columna][5]) == 0){
                 cont_replicas = 1;
